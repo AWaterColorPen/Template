@@ -28,8 +28,8 @@ struct DET {
 					double t = a[i][i] / a[j][i];
 					for (int k = i; k < n; k++) a[i][k] = a[i][k] - a[j][k] * t;
 					for (int k = i; k < n; k++) swap(a[i][k], a[j][k]);
-                    ans = -ans;
-                }
+					ans = -ans;
+                		}
 			if (sgn(a[i][i]) == 0) return 0;
 			ans *= a[i][i];
 		}
