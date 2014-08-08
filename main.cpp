@@ -123,7 +123,7 @@ double disptoseg(PT p, PT a, PT b)
 PT curp ;
 bool cmp_angle(PT a, PT b)
 {
-	int res = sgn( cpr(curp, a, b) );
+	int res = sgn(cpr(curp, a, b));
 	if (res > 0) return 1;
 	if (res < 0) return 0;
 	return dist(a, curp) < dist(b, curp) ;
@@ -131,15 +131,15 @@ bool cmp_angle(PT a, PT b)
 
 bool cmp_angle2(PT a, PT b)
 {
-	double k1 = atan2(a.y, a.x);
-	double k2 = atan2(b.y, b.x);
+	double k1 = a.ag();
+	double k2 = b.ag();
 	return (sgn(k1 - k2) == 0) ? (vlen(a) < vlen(b)) : (sgn(k1 - k2) < 0);
 }
 
 //点v绕着点p逆时针旋转angle并放大scale倍
-PT protate(PT v, PT p, double angle, double scale)
+PT protate(PT v, PT p, double ag, double scale)
 {
-	PT t = PT(cos(angle), sin(angle)) * scale;
+	PT t = PT(cos(ag), sin(ag)) * scale;
 	v = v - p;
 	p.x += v.x * t.x - v.y * t.y;
 	p.y += v.x * t.y + v.y * t.x;
@@ -223,25 +223,25 @@ void ints_line_circle(PT c, double r, PT a, PT b, PT &p1, PT &p2)
 //两圆公切线切点对应的角度
 
 //辅助函数
-void find_tp(double a, double b, double c, double &ang1, double &ang2)
+void find_tp(PT p, double c, double &ag1, double &ag2)
 {
 	double v1, v2;
-	v1 = fabs(c) > eps ? atan2(b * c, a * c) : atan2(b, a);
-	v2 = acos(fabs(c) / sqrt(a * a + b * b));
-	ang1 = v1 - v2;
-	ang2 = v1 + v2;
+	v1 = fabs(c) > eps ? (p * c).ag() : p.ag();
+	v2 = acos(fabs(c) / vlen(p));
+	ag1 = v1 - v2;
+	ag2 = v1 + v2;
 }
 
 //外公切线(所求角度t1 t2均对两圆均适用)
 void tangent1(PT c1, double r1, PT c2, double r2, double &t1, double &t2)
 {
-	find_tp(c2.x - c1.x, c2.y - c1.y, r1 - r2, t1, t2);
+	find_tp(c2 - c1, r1 - r2, t1, t2);
 }
 
 //内公切线(所求角度t1 t2均对圆c1而言,对圆c2则需加(减)PI)
 void tangent2(PT c1, double r1, PT c2, double r2, double &t1, double &t2)
 {
-	find_tp(c2.x - c1.x, c2.y - c1.y, r1 + r2, t1, t2);
+	find_tp(c2 - c1, r1 + r2, t1, t2);
 }
 
 //sphere
