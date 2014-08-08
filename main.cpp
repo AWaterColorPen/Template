@@ -16,14 +16,15 @@ struct PT {
 	double x, y;
 	PT () {}
 	PT (double x, double y) : x(x), y(y) {}
-	void rd() { scanf("%lf %lf", &x, &y) ; }
-	PT operator - (const PT o) { return PT(x - o.x, y - o.y) ; }
 	PT operator + (const PT o) { return PT(x + o.x, y + o.y) ; }
+	PT operator - (const PT o) { return PT(x - o.x, y - o.y) ; }
 	PT operator * (double s) { return PT(x * s, y * s) ; }
 	PT operator / (double s) { return PT(x / s, y / s) ; }
 	bool operator < (const PT &o) const { return y < o.y - eps || (y < o.y + eps && x < o.x - eps) ; }
 	bool operator == (const PT &o) const { return !sgn(y - o.y) && !sgn(x - o.x) ; }
 	bool operator != (const PT &o) const { return sgn(y - o.y) || sgn(x - o.x) ; }
+	void rd() { scanf("%lf %lf", &x, &y) ; }
+	double ag() { return atan2(y, x) ; }
 }	;
 
 bool cmpx(PT a, PT b) { return a.x < b.x - eps || (a.x < b.x + eps && a.y < b.y - eps); }
@@ -42,11 +43,8 @@ struct LE {
 	PT a, b, v;
 	double k;
 	LE () {}
-	LE (PT a, PT b) : a(a), b(b) { k = atan2(b.y - a.y, b.x - a.x); v = PT(a.y - b.y, b.x - a.x); v = v / vlen(v) ; }
-	bool operator < (const LE &o) const {
-		if (sgn(k - o.k) == 0) return cpr(a, o.a, b) > eps;
-		return sgn(k - o.k) < 0;
-	}
+	LE (PT a, PT b) : a(a), b(b) { k = (b - a).ag(); v = PT(a.y - b.y, b.x - a.x); v = v / vlen(v) ; }
+	bool operator < (const LE &o) const { return sgn(k - o.k) == 0 ? cpr(a, o.a, b) > eps : sgn(k - o.k) < 0; }
 }	;
 
 struct CLE {
@@ -54,9 +52,11 @@ struct CLE {
 	double r;
 	CLE () {}
 	CLE (PT c, double r) : c(c), r(r) {}
+	bool operator == (const CLE &o) { return c == o.c && !sgn(r - o.r) ; }
+	bool operator != (const CLE &o) { return c != o.c || sgn(r - o.r) ; }
 	void rd() { c.rd(); scanf("%lf", &r); }
-	PT pt(double kk) { return c + PT(cos(kk), sin(kk)) * r; }
-	double ang(PT a) { return atan2(a.y - c.y, a.x - c.x) ; }
+	PT pt(double k) { return c + PT(cos(k), sin(k)) * r; }
+	double ag(PT a) { return (a - c).ag() ; }
 	double sector0(double k1, double k2)
 	{
 		if (k1 > k2 + eps) return sector0(k1, PI) + sector0(-PI, k2);
@@ -69,8 +69,6 @@ struct CLE {
 		if (kk > PI) kk -= PI * 2;
 		return kk;
 	}
-	bool operator == (const CLE &o) { return c == o.c && !sgn(r - o.r) ; }
-	bool operator != (const CLE &o) { return c != o.c || sgn(r - o.r) ; }
 }	;
 
 //判两点ab与直线cd相对位置, 点在直线上0, 同侧1, 异侧-1
@@ -99,7 +97,7 @@ PT ints(PT a, PT b, PT c, PT d)
 PT ptoline(PT p, PT a, PT b)
 {
 	PT t(p.x + a.y - b.y, p.y + b.x - a.x) ;
-	return intersect(p, t, a, b);
+	return ints(p, t, a, b);
 }
 
 //点p到直线ab距离
@@ -162,11 +160,11 @@ PT circumcenter(PT a, PT b, PT c)
 PT incenter(PT a, PT b, PT c)
 {
 	double m, n;
-	m = atan2(b.y - a.y, b.x - a.x);
-	n = atan2(c.y - a.y, c.x - a.x);
+	m = (b - a).ag();
+	n = (c - a).ag();
 	PT u = a + PT(cos((m + n) / 2), sin(m + n) / 2);
-	m = atan2(a.y - b.y, a.x - b.x);
-	n = atan2(c.y - b.y, c.x - b.x);
+	m = (a - b).ag()
+	n = (c - b).ag();
 	PT v = b + PT(cos((m + n) / 2), sin(m + n) / 2);
 	return ints(a, u, b, v);
 }
@@ -250,7 +248,6 @@ void tangent2(PT c1, double r1, PT c2, double r2, double &t1, double &t2)
 /*
 PT sphere(double lam, double phi) { return PT(cos(phi) * cos(lam), cos(phi) * sin(lam), sin(phi)); }
 double dissphere(PT a, PT b, double r) { return asin( dist(a, b) / 2) * r ; }
-PT cpr(PT a, PT b) { return PT(a.y * b.z - a.z * b.y,  a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x); }
 */
 
 //判定凸多边形，顶点按顺时针或逆时针给出，允许相邻边共线(n>=3)
@@ -503,8 +500,8 @@ double delaunay_circle(PT a, PT b, PT o, double r)
 	int dd = (disptoseg(o, a, b) < r - eps);
 	
 	CLE oo = CLE(o, r);
-	double ka = oo.ang(a);
-	double kb = oo.ang(b);
+	double ka = oo.ag(a);
+	double kb = oo.ag(b);
 	
 	if (dd)
 	{
@@ -512,8 +509,8 @@ double delaunay_circle(PT a, PT b, PT o, double r)
 		
 		PT p1, p2;
 		ints_line_circle(o, r, a, b, p1, p2);
-		double k1 = oo.ang(p1);
-		double k2 = oo.ang(p2);
+		double k1 = oo.ag(p1);
+		double k2 = oo.ag(p2);
 		
 		if (d1 == 1 && d2 == 1)
 		{
@@ -529,21 +526,4 @@ double delaunay_circle(PT a, PT b, PT o, double r)
 	}
 	
 	return oo.sector1(ka, kb);
-}
-
-
-int main()
-{
-	freopen("1.txt", "r", stdin);
-	double ax, ay, bx, by, cx, cy;
-	
-	while (~scanf("%lf %lf %lf %lf %lf %lf", &ax, &ay, &bx, &by, &cx, &cy))
-	{
-		PT pa(ax, ay), pb(bx, by), pc(cx, cy);
-		PT oc = circumcenter(pa, pb, pc);
-		double r = dist(oc, pa);
-		work(oc.x, oc.y, r);
-		puts("");
-	}
-	return 0;
 }
