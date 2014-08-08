@@ -26,7 +26,7 @@ struct HASHTABLE {
 	{
 		int m = n.hash() % HASH_SIZE;
 		for (int i = hash[m]; i; i = pos[i]) if (n == st[i]) return 1;
-		return ++size, st[size] = n, pos[size] = hash[m], hash[m]=size, 0;
+		return ++size, st[size] = n, pos[size] = hash[m], hash[m] = size, 0;
 	}
 	void clear() { memset(hash, size = 0, sizeof(hash)); }
 }	F;
