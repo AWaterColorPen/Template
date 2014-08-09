@@ -2,21 +2,25 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#define _int64 long long
 
 using namespace std;
+
+typedef long long LL ;
 struct MATRIX {
 	static const int M = 2 ;
-	_int64 a[M][M];
-	int n, m;
-	void read(int x, int y) { n=x, m=y; }
+	
+	int n;
+	LL a[M][M];
+	
+	MATRIX () {}
+	MATRIX (int n) : n(n) {}
 	MATRIX operator * (const MATRIX &o) const {
-		MATRIX  ret;
+		MATRIX  ret(n);
 		memset(ret.a, 0, sizeof(ret.a));
-		for (int i=0; i<n; i++)
-			for (int j=0; j<o.m; j++)
-				for (int k=0; k<o.n; k++)
-					ret.a[i][j]=(ret.a[i][j] + a[i][k] * o.a[k][j]) % MOD;
-		return ret.read(n, o.m), ret;
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				for (int k = 0; k < n; k++)
+					ret.a[i][j] = (ret.a[i][j] + a[i][k] * o.a[k][j]) % MOD;
+		return ret;
 	}
 }	g, gn, U;

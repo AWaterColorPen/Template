@@ -1,16 +1,16 @@
 #include<iostream>
 #include<complex>
-#include<cstdio>
+#include <cstdio>
 
 using namespace std;
 int main()
 {
 	complex <double> a(1, 1), b(1, 1);
 	cout << a << endl;						// 笛卡尔坐标
-	cout << a+b << endl;					// 四则运算
-	cout << a-b << endl;
-	cout << a*b << endl;
-	cout << a/b << endl;
+	cout << a + b << endl;					// 四则运算
+	cout << a - b << endl;
+	cout << a * b << endl;
+	cout << a / b << endl;
 	cout << boolalpha << (a == b) << endl;	// 相等
 	cout << boolalpha << (a != b) << endl;	// 不相等
 	cout << a. real() << endl;				// 实部
