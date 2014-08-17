@@ -36,7 +36,7 @@ double dpr(PT a, PT b) { return a.x * b.x + a.y * b.y ; }
 double cpr(PT a, PT b, PT c) { return cpr(b - a, c - a) ; }
 double dpr(PT a, PT b, PT c) { return dpr(b - a, c - a) ; }
 
-double vlen(PT a) { return sqrt(a.x * a.x + a.y * a.y) ; }
+double vlen(PT a) { return sqrt(dpr(a, a)) ; }
 double dist(PT a, PT b) { return vlen(a - b) ; }
 
 struct LE {
@@ -243,12 +243,6 @@ void tangent2(PT c1, double r1, PT c2, double r2, double &t1, double &t2)
 {
 	find_tp(c2 - c1, r1 + r2, t1, t2);
 }
-
-//sphere
-/*
-PT sphere(double lam, double phi) { return PT(cos(phi) * cos(lam), cos(phi) * sin(lam), sin(phi)); }
-double dissphere(PT a, PT b, double r) { return asin( dist(a, b) / 2) * r ; }
-*/
 
 //判定凸多边形，顶点按顺时针或逆时针给出，允许相邻边共线(n>=3)
 int is_convex(PT p[], int n)
@@ -527,3 +521,9 @@ double delaunay_circle(PT a, PT b, PT o, double r)
 	
 	return oo.sector1(ka, kb);
 }
+
+//sphere
+/*
+PT sphere(double lam, double phi) { return PT(cos(phi) * cos(lam), cos(phi) * sin(lam), sin(phi)); }
+double dissphere(PT a, PT b, double r) { return asin( dist(a, b) / 2) * r ; }
+*/
