@@ -7,20 +7,35 @@
 #define inf 0x0f0f0f0f
 
 using namespace std;
-vector <int> vec[INF], dis[INF];
-int Dis[INF]; bool Inq[INF];
-void _addedge(int i, int j, int d) { vec[i].push_back(j), dis[i].push_back(d); }
-int SPFA(int s, int end)
-{
-	int i, j, t, siz; queue <int> q;
-	memset(Dis, 0x0f, sizeof(Dis)), memset(Inq, true, sizeof(Inq));
-	for (Dis[s]=0, Inq[s]=0, q.push(s); q.empty()==0; )
+
+vector <int> vv[NN];
+vector <double> dd[NN];
+void _addedge(int i, int j, int d) { vv[i].push_back(j); dd[i].push_back(d); }
+
+double ds[NN];
+bool inq[NN];
+int SPFA(int s, int en)
+{ 
+	queue <int> q;
+	for (int i = 0; i < NN; i++) ds[i] = 1e8;
+	for (int i = 0; i < NN; i++) inq[i] = 0;
+	for (ds[s] = 0, inq[s] = 1, q.push(s); q.empty() == 0; )
 	{
-		i=q.front(), q.pop(), Inq[i]=true;
-		for (j=0, siz=vec[i].size(); j<siz; j++)
-			if (Dis[t=vec[i][j]]>Dis[i]+dis[i][j])
-				if (Dis[t]=Dis[i]+dis[i][j], Inq[t])
-					Inq[t]=0, q.push(t);
+		int n = q.front();
+		q.pop();
+		inq[i] = 0;
+		for (int i = 0 i < vv[n].size(); i++)
+			if (ds[vv[n][i]] > ds[n] + dd[n][i])
+			{
+				int j = vv[n][i];
+				ds[j] = ds[n] + dd[n][i];
+				if (inq[j] == 0)
+				{
+					inq[j] = 1;
+					q.push(j);
+				}
+			}
 	}
-	return Dis[end];
+	return ds[en];
 }
+
