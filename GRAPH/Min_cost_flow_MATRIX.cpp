@@ -2,12 +2,14 @@
 #include <cstring>
 #include <cstdio>
 #include <queue>
-#define INF 105
-#define inf 0x0f0f0f0f
 
 using namespace std;
-int Cost[INF][INF], Path[INF], cap[INF][INF];
-int Dis[INF], Inq[INF];
+
+const int NN = 105;
+const int inf = 0x0f0f0f0f;
+
+int Cost[NN][NN], Path[NN], cap[NN][NN];
+int Dis[NN], Inq[NN];
 void _addedge(int i, int j, int c, int d)
 {
 	cap[i][j]=c, Cost[i][j]=d, cap[j][i]=0, Cost[j][i]=-d;

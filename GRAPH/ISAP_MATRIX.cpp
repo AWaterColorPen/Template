@@ -6,7 +6,7 @@
 
 using namespace std;
 int cap[INF][INF], Dfn[INF], Gap[INF];
-void _addedge(int i, int j, int c) { cap[i][j]+=c; }
+void _addedge(int i, int j, int c) { cap[i][j] += c; }
 int S, E, CNT;
 int ISAP(int n, int flow)
 {
