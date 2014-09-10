@@ -8,7 +8,7 @@ using namespace std;
 struct TRIE {
 	static const int M = 100005 ;
 	int val[M], ch[M][26], ID[128], size;
-	TRIE() { for (int i = 0; i < 26; i++) ID[i + 'a']=i; }
+	TRIE() { for (int i = 0; i < 26; i++) ID[i + 'a'] = i; }
 	void clear() {
 		memset(ch[0], 0, sizeof(ch[0]));
 		memset(val, size = 0, sizeof(val));
