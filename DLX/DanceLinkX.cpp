@@ -3,9 +3,11 @@
 #include <cstring>
 #include <cstdio>
 #include <vector>
-#define inf 0x0f0f0f0f
 
 using namespace std;
+
+const int inf = 0x0f0f0f0f;
+
 struct DLX {
 	static const int MC = 350, MR = 1005, M = 3505;
 	int D[M], U[M], L[M], R[M], COL[M], ROW[M], S[MC];
@@ -38,6 +40,7 @@ struct DLX {
 			for (int j = L[i]; j != i; j = L[j])
 				D[U[j]] = j, U[D[j]] = j, S[COL[j]]++;
 	}
+	
 	void remove_repeat(int c)
 	{
 		for (int i = D[c]; i != c; i = D[i])
