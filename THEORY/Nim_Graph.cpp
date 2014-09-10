@@ -45,40 +45,28 @@ int ins[INF];
 
 void tarjan(int n)
 {
-	int i, j;
+	int i;
 	low[n] = dfn[n] = ++Cnt, ins[stk[++Now] = n] = 1;
-	for (i = 0; i < vv[n].size(); i++)
-		if (dfn[j = vv[n][i]] == 0)
-			tarjan(j), low[n] = min(low[n], low[j]);
-		else if (ins[j]) low[n] = min(low[n], low[j]);
+	for (EDGE *p = Edge[n]; p; p = p->next)
+		if (p->vis) {
+			p->ani->vis = 0;
+			if (dfn[i = p->i]) tarjan(i), low[n] = min(low[n], low[i]);
+			else if (ins[i]) low[n] = min(low[n], low[i]);
+		}
 	if (dfn[n] == low[n] && ++Block)
 		do blo[i = stk[Now--]] = Block, ins[i] = 0;
 		while (i != n);
 }
 
-void Tarjan_edge(int n)
-{
-	int i;
-	Dfn[n]=Low[n]=++Cnt, Instack[Stack[++Now]=n]=1;
-	for (EDGE *p=Edge[n]; p; p=p->next)
-		if (p->vis) {
-			if (p->ani->vis=0, Dfn[i=p->i]==0)
-				Tarjan_edge(i), Low[n]=min(Low[n], Low[i]);
-			else	if (Instack[i]) Low[n]=min(Low[n], Low[i]);
-		}
-	if (Dfn[n]==Low[n] && ++Block)
-		do Blo[i=Stack[Now--]]=Block, Instack[i]=false;
-		while (i!=n);
-}
 int CNTE[INF];
 void make_gragh(int n)
 {
 	memset(CNTE, 0, sizeof(CNTE));
-	for (int i=1; i<=n; i++)
-		for (EDGE *p=Edge[i]; p; p=p->next)
+	for (int i = 1; i <= n; i++)
+		for (EDGE *p = Edge[i]; p; p = p->next)
 		{
-		    if (Blo[i]<Blo[p->i]) gnim._addedge(Blo[i], Blo[p->i]);
-			if (Blo[i]==Blo[p->i] && p->vis) CNTE[Blo[i]]++;
+		    if (Blo[i] < Blo[p->i]) gnim._addedge(Blo[i], Blo[p->i]);
+			if (Blo[i] == Blo[p->i] && p->vis) CNTE[Blo[i]]++;
 		}
-	for (int i=1, m=Block; i<=m; i++) if (CNTE[i]>1 && CNTE[i]&1) gnim._addedge(i, ++Block);
+	for (int i = 1, m = Block; i <= m; i++) if (CNTE[i] > 1 && CNTE[i] & 1) gnim._addedge(i, ++Block);
 }

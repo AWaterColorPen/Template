@@ -16,20 +16,20 @@ void _addedge(int i, int j, int c, EDGE &e1, EDGE &e2)
 }
 int ISAP(int n, int flow)
 {
-	if (n==E) return flow;
-	int i, tab=CNT, vary, now=0;
-	for (EDGE *p=Edge[n]; p; p=p->next)
+	if (n == E) return flow;
+	int i, tab = CNT, vary, now=0;
+	for (EDGE *p = Edge[n]; p; p = p->next)
 		if (p->c) {
-			if (Dfn[n]==Dfn[i=p->i]+1)
-				vary=ISAP(i, min(p->c, flow-now)),
-				p->c-=vary, p->ani->c+=vary, now+=vary;
-			if (Dfn[S]==CNT) return now;
-			if (p->c) tab=min(tab, Dfn[i]);
-			if (now==flow) break;
+			if (Dfn[n] == Dfn[i = p->i] + 1)
+				vary = ISAP(i, min(p->c, flow - now)),
+				p->c -= vary, p->ani->c += vary, now += vary;
+			if (Dfn[S] == CNT) return now;
+			if (p->c) tab = min(tab, Dfn[i]);
+			if (now == flow) break;
 		}
-	if (now==0) {
-		if (--Gap[Dfn[n]]==0) Dfn[S]=CNT;
-		Gap[Dfn[n]=tab+1]++;
+	if (now == 0) {
+		if (--Gap[Dfn[n]] == 0) Dfn[S]=CNT;
+		Gap[Dfn[n] = tab + 1]++;
 	}
 	return now;
 }

@@ -6,27 +6,31 @@ using namespace std;
 struct EDGE {
 	int i; bool vis; EDGE *next,*ani;
 }	*Edge[INF], E[INF<<2];
-int Low[INF], Dfn[INF], Stack[INF], Blo[INF], Con[INF], Ans[INF];
-int Block, Brige, Cnt, Now;
-bool Instack[INF];
+
 void _addedge(int i, int j, EDGE &e1, EDGE &e2)
 {
-	e1.i=j, e1.vis=true, e1.ani=&e2, e1.next=Edge[i], Edge[i]=&e1;
-	e2.i=i, e2.vis=true, e2.ani=&e1, e2.next=Edge[j], Edge[j]=&e2;
+	e1.i=j, e1.vis=1, e1.ani=&e2, e1.next=Edge[i], Edge[i]=&e1;
+	e2.i=i, e2.vis=1, e2.ani=&e1, e2.next=Edge[j], Edge[j]=&e2;
 }
-void Tarjan_edge(int n)
+int dfn[INF], low[INF], stk[INF], blo[INF], Block, Cnt, Now;
+int ins[INF];
+int brige;
+
+void tarjan(int n)
 {
 	int i;
-	Dfn[n]=Low[n]=++Cnt, Instack[Stack[++Now]=n]=true;
-	for (EDGE *p=Edge[n]; p; p=p->next)
+	low[n] = dfn[n] = ++Cnt, ins[stk[++Now] = n] = 1;
+	for (EDGE *p = Edge[n]; p; p = p->next)
 		if (p->vis) {
-			if (p->ani->vis=false, Dfn[i=p->i]==0) {
-				Tarjan_edge(i), Low[n]=min(Low[n], Low[i]);
-				if (Dfn[n]<Low[i]) Brige++;
+			p->ani->vis = 0;
+			if (dfn[i = p->i]) {
+				tarjan(i), low[n] = min(low[n], low[i]);
+				if (dfn[n] < low[i]) brige++;
 			}
-			else	if (Instack[i]) Low[n]=min(Low[n], Low[i]);
+			else if (ins[i]) low[n] = min(low[n], low[i]);
 		}
-	if (Dfn[n]==Low[n] && ++Block)
-		do Blo[i=Stack[Now--]]=Block, Instack[i]=false;
-		while (i!=n);
+	if (dfn[n] == low[n] && ++Block)
+		do blo[i = stk[Now--]] = Block, ins[i] = 0;
+		while (i != n);
 }
+
