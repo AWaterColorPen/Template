@@ -2,13 +2,14 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#define INF 100005
-#define inf 0x0f0f0f0f0f0f0f0fLL
-#define _int64 long long 
 
 using namespace std;
-int idx;
 
+typedef long long LL;
+const LL inf = 0x0f0f0f0f0f0f0f0fLL;
+const int NN = 100005;
+
+int idx;
 struct NODE {
 	static const int KD = 2;
 	int id;

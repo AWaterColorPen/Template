@@ -1,30 +1,39 @@
 #include <iostream>
 #include <cstdio>
-#define INF 0x20001
-#define _int64 long long
 
 using namespace std;
-_int64 S_org[INF], T_deli[INF], T_del[INF], inf;
-void Update0(int i, int m, _int64 *t)
+
+typedef long long LL;
+const int NN = 0x20001;
+
+LL so[NN], tdi[NN], td[NN], inf;
+void update(int i, int m, LL t[])
 {
-	for (; i<=inf; i+=i&(-i)) t[i]+=m;
+	for ( ; i <= inf; i += i & (-i)) t[i] += m;
 }
-void Update(int i, int j, int m)
+void modify(int i, int j, int m)
 {
-	Update0(i, m*i, T_deli),	Update0(j+1, -m*(j+1), T_deli),
-	Update0(i, m, T_del),		Update0(j+1, -m, T_del);
+	update(i, m * i, tdi);
+	update(i, m, td);
+	update(j + 1, -m * (j + 1), tdi),
+	update(j + 1, -m, td);
 }
-_int64 Sum(int n)
+LL ask(int n)
 {
-	_int64 sum=S_org[n], k=n+1, now;
-	for (now=0; n; n-=n&(-n))
-		sum-=T_deli[n], now+=T_del[n];
-	return sum+=k*now;
+	LL sum = so[n], k = n + 1, now;
+	for (now = 0; n; n -= n&(-n))
+		sum -= tdi[n], now += td[n];
+	return sum += k * now;
 }
 int main()
 {
-	int i,j,m,n;
-	for (i=1, scanf("%d%d", &n, &m); i<=n; i++)
-		scanf("%d", &j), S_org[i]=S_org[i-1]+j;
+	int n, m;
+	cin >> n >> m;
+	for (int i = 1; i <= n; i++)
+	{
+		int x;
+		cin >> x;
+		so[i] = so[i - 1] + x;
+	}
 	return 0;
 }

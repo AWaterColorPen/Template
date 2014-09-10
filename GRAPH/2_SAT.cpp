@@ -4,12 +4,13 @@
 #include <vector>
 #include <queue>
 #define INF 105
-#define inf 0x0f0f0f0f
 
 using namespace std;
 
-vector <int> vec[INF];
-void _addedge(int x, int y) { vec[x].push_back(y) ; }
+const NN = 105;
+
+vector <int> vv[INF];
+void _addedge(int x, int y) { vv[x].push_back(y) ; }
 
 int dfn[INF], low[INF], stk[INF], blo[INF], Block, Cnt, Now;
 int ins[INF];
