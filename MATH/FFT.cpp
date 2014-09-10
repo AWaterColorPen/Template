@@ -8,7 +8,7 @@
 
 using namespace std;
 
-static const int M = 70005;
+const int M = 70005;
 
 const long double PI = acos(-1);
 typedef long long LL;
