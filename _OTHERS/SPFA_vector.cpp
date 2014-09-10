@@ -3,10 +3,11 @@
 #include <cstdio>
 #include <vector>
 #include <queue>
-#define INF 5005
-#define inf 0x0f0f0f0f
 
 using namespace std;
+
+const int NN = 5005;
+const int inf = 0x0f0f0f0f;
 
 vector <int> vv[NN];
 vector <double> dd[NN];

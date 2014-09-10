@@ -1,30 +1,33 @@
 #include <algorithm>
 #include <iostream>
 #include <cstdio>
-#define INF 105
 
 using namespace std;
+
+const int NN = 105;
+
 struct EDGE {
-	int i, j, w;
-}	E[INF*INF>>1];
-int F[INF];
-bool cmp(EDGE a, EDGE b) {
-	return a.w<b.w;
-}
-void _addedge(int i, int j, int w, EDGE &e) { e.i=i, e.j=j, e.w=w; }
-int Find(int n)
+	int x, y, z;
+	EDGE () {}
+	EDGE (int x, int y, int z) : x(x), y(y), z(z) {}
+	bool operator < (const EDGE &o) { return z < o.z ; }
+}	ee[NN * NN];
+
+int fa[NN];
+int fath(int x) { return fa[x] == x ? x : fa[x] = fath(fa[x]); }
+
+int Kruskal(int n, int ecnt)
 {
-	if (F[n]==n) return n;
-	return F[n]=Find(F[n]);
-}
-int Kruskal(int n, int edge)
-{
-	int i, cnt=1, cost=0;
-	sort(E+1, E+edge+1, cmp);
-	for (i=1; i<=n; i++) F[i]=i;
-	for (i=1; i<=edge && cnt<n; i++)
-		if (Find(E[i].i)!=Find(E[i].j))
-			F[F[E[i].i]]=F[E[i].j], cnt++, cost+=Edge[i].w;
-	if (cnt<n) return -1;
+	int cnt = 1, cost = 0;
+	sort(ee ,ee + ecnt);
+	for (int i = 1; i <= n; i++) fa[i] = i;
+	for (int i = 0; i < ecnt && cnt < n; i++)
+		if (fath(ee[i].x) != fath(ee[i].y))
+		{
+			fa[fa[ee[i].x]] = fa[ee[i].y];
+			cnt++;
+			cost += ee[i].z;
+		}
+	if (cnt < n) return -1;
 	return cost;
 }

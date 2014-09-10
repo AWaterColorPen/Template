@@ -6,10 +6,10 @@ using namespace std;
 typedef long long LL;
 const int NN = 0x20001;
 
-LL so[NN], tdi[NN], td[NN], inf;
+LL so[NN], tdi[NN], td[NN];
 void update(int i, int m, LL t[])
 {
-	for ( ; i <= inf; i += i & (-i)) t[i] += m;
+	for ( ; i < NN; i += i & (-i)) t[i] += m;
 }
 void modify(int i, int j, int m)
 {
