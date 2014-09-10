@@ -6,29 +6,30 @@
 using namespace std;
 struct FACE {
 	int a[3][3];
-	void read(int c)
-	{
-		for (int i=0, id=0; i<=2; i++)
-			for (int j=0; j<=2; j++)
-				a[i][j]=c*9+id, ++id;
-	}
-	bool operator == (const FACE &o)
-	{
-		for (int i=0; i<=2; i++)
-			for (int j=0; j<=2; j++)
-				if (a[i][j]!=o.a[i][j]) return 0;
+	bool operator == (const FACE &o) {
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
+				if (a[i][j] != o.a[i][j]) 
+					return 0;
 		return 1;
 	}
+	void read(int c)
+	{
+		for (int i = 0, id = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
+				a[i][j] = c * 9 + id, ++id;
+	}
 }	;
+
 struct CUBE {
 	FACE s[6];
 	CUBE ()
 	{
-		for (int i=0; i<6; i++) s[i].read(i);
+		for (int i = 0; i < 6; i++) s[i].read(i);
 	}
 	bool operator == (const CUBE &o)
 	{
-		for (int i=0; i<6; i++) if ((s[i]==o.s[i])==0) return 0;
+		for (int i = 0; i < 6; i++) if ((s[i] == o.s[i]) == 0) return 0;
 		return 1;
 	}
 	void rotate(int ty)
@@ -46,12 +47,12 @@ struct CUBE {
 						{35,32,29,42,43,44, 9,12,15,47,46,45, 6, 3, 0, 1, 2, 5, 8, 7},
 						{17,14,11,38,37,36,27,30,33,51,52,53,24,21,18,19,20,23,26,25} };
 					
-		CUBE tmp=*this;
-		for (int i=0, k=ty>>1; i<20; i++)
+		CUBE tmp = *this;
+		for (int i = 0, k = ty >> 1; i < 20; i++)
 		{
-			int x=X[k][i], y=Y[k][i];
-			if (ty&1) s[y/9].a[y%9/3][y%3]=tmp.s[x/9].a[x%9/3][x%3];
-			else s[x/9].a[x%9/3][x%3]=tmp.s[y/9].a[y%9/3][y%3];
+			int x = X[k][i], y = Y[k][i];
+			if (ty & 1) s[y / 9].a[y % 9 / 3][y % 3] = tmp.s[x / 9].a[x % 9 / 3][x % 3];
+			else s[x / 9].a[x % 9 / 3][x % 3]=tmp.s[y / 9].a[y % 9 / 3][y % 3];
 		}
 	}
 }	cube;

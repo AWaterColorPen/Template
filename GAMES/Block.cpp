@@ -30,8 +30,8 @@ struct BLOCK {
 	void bfs(int sx, int sy)
 	{
 		queue <PT> q;
-		int X[4]={0, 1, 0,-1};
-		int Y[4]={1, 0,-1, 0};
+		int X[4] = {0, 1, 0,-1};
+		int Y[4] = {1, 0,-1, 0};
 		
 		for (q.push(PT(sx, sy)), vis[sx][sy] = 1; q.empty() == 0; )
 		{
