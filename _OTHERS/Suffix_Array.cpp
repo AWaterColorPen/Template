@@ -2,40 +2,54 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#define INF 25005
-#define inf 0x0f0f0f0f
-#define ASCII 256
 
 using namespace std;
-int ARR[4][INF], Height[INF], Arr[INF], Buck[INF];
-int *SA, *_SA, *RANK, *_RANK;
+
+const int NN = 25005;
+const int ASCII = 256;
+
+int ARR[4][NN], Arr[NN], bu[NN];
+int *sa, *_sa, *rk, *_rk;
 void Suffix_Array(int n)
 {
-	SA=ARR[0], _SA=ARR[1], RANK=ARR[2], _RANK=ARR[3];
-	int i, k, *t;		memset(Buck, 0, sizeof(Buck));
-	for (i=1; i<=n; i++)		Buck[Arr[i]]++;
-	for (i=1; i<=ASCII; i++)	Buck[i]+=Buck[i-1];
-	for (i=n; i; i--)			SA[Buck[Arr[i]]--]=i;
-	for (RANK[SA[1]]=1, i=2; i<=n; i++)
-		RANK[SA[i]]=RANK[SA[i-1]],
-		RANK[SA[i]]+=(Arr[SA[i]]!=Arr[SA[i-1]]);
-	for(k=1; k<=n && RANK[SA[n]]<n; k<<=1)
+	sa = ARR[0];
+	_sa = ARR[1];
+	rk = ARR[2];
+	_rk = ARR[3];	
+	memset(bu, 0, sizeof(bu));
+	for (int i = 1; i <= n; i++) bu[Arr[i]]++;
+	for (int i = 1; i <= ASCII; i++) bu[i] += bu[i - 1];
+	for (int i = n; i; i--)	sa[bu[Arr[i]]--] = i;
+	
+	rk[sa[1]] = 1;
+	for (int i = 2; i <= n; i++) {
+		rk[sa[i]] = rk[sa[i - 1]];
+		rk[sa[i]] += (Arr[sa[i]] != Arr[sa[i - 1]]);
+	}
+	
+	for(int k = 1; k <= n && rk[sa[n]] < n; k <<= 1)
 	{
-		for(i=1; i<=n; i++)				Buck[RANK[SA[i]]]=i;
-		for(i=n; i; i--) if(SA[i]-k>0)	_SA[Buck[RANK[SA[i]-k]]--]=SA[i]-k;
-		for(i=n-k+1; i<=n; i++)			_SA[Buck[RANK[i]]--]=i;
-		for(_RANK[_SA[1]]=1, i=2; i<=n; i++)
-			_RANK[_SA[i]]=_RANK[_SA[i-1]],
-			_RANK[_SA[i]]+=(RANK[_SA[i]]!=RANK[_SA[i-1]] || RANK[_SA[i]+k]!=RANK[_SA[i-1]+k]);
-		t=SA, SA=_SA, _SA=t, t=RANK, RANK=_RANK, _RANK=t;
+		for(int i = 1; i <= n; i++)	bu[rk[sa[i]]] = i;
+		for(int i = n; i; i--) if(sa[i] - k > 0) _sa[bu[rk[sa[i] - k]]--] = sa[i] - k;
+		for(int i = n - k + 1; i <= n; i++)	_sa[bu[rk[i]]--] = i;
+		
+		_rk[_sa[1]] = 1;
+		for(int i = 2; i <= n; i++) {
+			_rk[_sa[i]] = _rk[_sa[i - 1]],
+			_rk[_sa[i]] += (rk[_sa[i]] != rk[_sa[i - 1]] || rk[_sa[i] + k] != rk[_sa[i - 1] + k]);
+		}
+		swap(sa, _sa);
+		swap(rk, _rk);
 	}
 }
-void Cal_Height(int n)
+
+int HH[NN];
+void CalH(int n)
 {
-	for (int i=1, k=0, j; i<=n; i++)
-		if (RANK[i]==1) Height[1]=0;
-		else	{
-			for (j=SA[RANK[i]-1]; Arr[i+k]==Arr[j+k]; k++);
-			if (Height[RANK[i]]=k, k) k--;
+	for (int i = 1, k = 0, j; i <= n; i++)
+		if (rk[i] == 1) HH[1] = 0;
+		else {
+			for (int j = sa[rk[i] - 1]; Arr[i + k] == Arr[j + k]; k++) ;
+			if (HH[rk[i]] = k, k) k--;
 		}
 }
