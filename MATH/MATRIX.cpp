@@ -8,10 +8,8 @@ using namespace std;
 typedef long long LL ;
 struct MATRIX {
 	static const int M = 2 ;
-	
 	int n;
 	LL a[M][M];
-	
 	MATRIX () {}
 	MATRIX (int n) : n(n) {}
 	MATRIX operator * (const MATRIX &o) const {
