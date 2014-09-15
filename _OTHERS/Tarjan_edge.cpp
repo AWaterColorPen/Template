@@ -23,7 +23,7 @@ void tarjan(int n)
 	for (EDGE *p = Edge[n]; p; p = p->next)
 		if (p->vis) {
 			p->ani->vis = 0;
-			if (dfn[i = p->i]) {
+			if (dfn[i = p->i] == 0) {
 				tarjan(i), low[n] = min(low[n], low[i]);
 				if (dfn[n] < low[i]) brige++;
 			}

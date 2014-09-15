@@ -14,7 +14,7 @@ void Tarjan_point(int n)
 	int i, j;
 	dfn[n] = low[n] = ++Cnt;
 	for (i = 0; i < vv[n].size(); i++)
-		if (dfn[j = vv[n][i]] == 0)
+		if (dfn[j = vv[n][i]] == 0) {
 			Tarjan_point(j), low[n] = min(low[n], low[j]);
 			if (dfn[n] <= low[j]) blo[n]++;
 		}
