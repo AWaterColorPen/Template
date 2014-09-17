@@ -11,7 +11,7 @@ typedef long long LL;
 static const int M = 1000005 ;
 int prime[M / 12], phi[M], mu[M];
 bool primes[M];
-void Euler_primes_phi_mu()
+void Euler_primes_phi()
 {
 	phi[1] = 1;
 	for (int i = 2; i < M; i++)
