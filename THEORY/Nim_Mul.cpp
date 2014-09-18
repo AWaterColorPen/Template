@@ -48,7 +48,7 @@ struct NIM_MUL {
 		for (int i = 0; x >= pow2[i]; i++) m = pow2[i];
 		LL p = x / m, q = x % m, s = y / m, t = y % m;
 		LL c1 = nim_mul(p, s);
-		LL c2 = nim_mul(p, t)^nim_mul(q, s);
+		LL c2 = nim_mul(p, t) ^ nim_mul(q, s);
 		LL c3 = nim_mul(q, t);
 		return ((c1 ^ c2) * m) ^ c3 ^ nim_mul_pow(m / 2, c1);
 	}

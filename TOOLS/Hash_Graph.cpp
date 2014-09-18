@@ -17,7 +17,7 @@ struct GRAPH_HASH {
 	{
 		n = _n, A = a, B = b, C = c, D = d, P = p, K = k;
 	}
-	void _addedge(int i, int j) { edge.push_back(make_pair(i,j)); }
+	void _addedge(int i, int j) { edge.push_back(make_pair(i, j)); }
 	void graph_hash()
 	{
 		for (int i = 1; i <= n; i++)
@@ -37,6 +37,6 @@ struct GRAPH_HASH {
 			}
 			hash[i] = f[i];
 		}
-		sort(hash+1, hash + n + 1);
+		sort(hash + 1, hash + n + 1);
 	}
 }	g[2];

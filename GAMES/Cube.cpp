@@ -23,12 +23,10 @@ struct FACE {
 
 struct CUBE {
 	FACE s[6];
-	CUBE ()
-	{
+	CUBE () {
 		for (int i = 0; i < 6; i++) s[i].read(i);
 	}
-	bool operator == (const CUBE &o)
-	{
+	bool operator == (const CUBE &o) {
 		for (int i = 0; i < 6; i++) if ((s[i] == o.s[i]) == 0) return 0;
 		return 1;
 	}

@@ -3,7 +3,6 @@
 #include <cstring>
 #include <cstdio>
 #include <vector>
-#define INF 105
 
 using namespace std;
 
@@ -30,27 +29,32 @@ struct GRAGH_NIM {
 	}
 }	gnim;
 
+const int NN = 105;
+
 struct EDGE {
-	int i, vis; EDGE *next,*ani;
-}	*Edge[INF], E[INF<<4];
+	int i, v;
+	EDGE *next,*ani;
+	EDGE() {}
+	EDGE(int i, int v, EDGE *next, EDGE *ani) : i(i), v(v), next(next), ani(ani) {}
+}	*Edge[NN], E[NN << 4];
 
 void _addedge(int i, int j, EDGE &e1, EDGE &e2)
 {
-	e1.i=j, e1.vis=1, e1.ani=&e2, e1.next=Edge[i], Edge[i]=&e1;
-	e2.i=i, e2.vis=1, e2.ani=&e1, e2.next=Edge[j], Edge[j]=&e2;
+	e1 = EDGE(j, 1, Edge[i], &e2); Edge[i] = &e1;
+	e2 = EDGE(i, 1, Edge[j], &e1); Edge[j] = &e2;
 }
 
-int dfn[INF], low[INF], stk[INF], blo[INF], Block, Cnt, Now;
-int ins[INF];
+int dfn[NN], low[NN], stk[NN], blo[NN], Block, Cnt, Now;
+int ins[NN];
 
 void tarjan(int n)
 {
 	int i;
 	low[n] = dfn[n] = ++Cnt, ins[stk[++Now] = n] = 1;
 	for (EDGE *p = Edge[n]; p; p = p->next)
-		if (p->vis) {
-			p->ani->vis = 0;
-			if (dfn[i = p->i]) tarjan(i), low[n] = min(low[n], low[i]);
+		if (p->v) {
+			p->ani->v = 0;
+			if (dfn[i = p->i] == 0) tarjan(i), low[n] = min(low[n], low[i]);
 			else if (ins[i]) low[n] = min(low[n], low[i]);
 		}
 	if (dfn[n] == low[n] && ++Block)
@@ -59,6 +63,7 @@ void tarjan(int n)
 }
 
 int CNTE[INF];
+
 void make_gragh(int n)
 {
 	memset(CNTE, 0, sizeof(CNTE));

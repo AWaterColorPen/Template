@@ -1,23 +1,29 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#define INF 400005
-#define inf 0x0f0f0f0f
 
 using namespace std;
+
+const int NN = 400005;
+const int inf = 0x0f0f0f0f;
 struct EDGE {
-	int i, c; EDGE *next, *ani;
-}	*Edge[INF], e[INF<<1];
-int Dfn[INF], Gap[INF], S, E, CNT;
+	int i, c;
+	EDGE *next, *ani;
+	EDGE () {}
+	EDGE (int i, int c, EDGE *next, EDGE *ani) : i(i), c(c), next(next), ani(ani) {}
+}	*Edge[NN], e[NN << 1];
+
 void _addedge(int i, int j, int c, EDGE &e1, EDGE &e2)
 {
-	e1.i=j, e1.c=c, e1.ani=&e2, e1.next=Edge[i], Edge[i]=&e1;
-	e2.i=i, e2.c=0, e2.ani=&e1, e2.next=Edge[j], Edge[j]=&e2;
+	e1 = EDGE(j, c, Edge[i], &e2); Edge[i] = &e1;
+	e2 = EDGE(i, 0, Edge[j], &e1); Edge[j] = &e2;
 }
+
+int Dfn[NN], Gap[NN], S, E, CNT;
 int ISAP(int n, int flow)
 {
 	if (n == E) return flow;
-	int i, tab = CNT, vary, now=0;
+	int i, tab = CNT, vary, now = 0;
 	for (EDGE *p = Edge[n]; p; p = p->next)
 		if (p->c) {
 			if (Dfn[n] == Dfn[i = p->i] + 1)
@@ -28,7 +34,7 @@ int ISAP(int n, int flow)
 			if (now == flow) break;
 		}
 	if (now == 0) {
-		if (--Gap[Dfn[n]] == 0) Dfn[S]=CNT;
+		if (--Gap[Dfn[n]] == 0) Dfn[S] = CNT;
 		Gap[Dfn[n] = tab + 1]++;
 	}
 	return now;

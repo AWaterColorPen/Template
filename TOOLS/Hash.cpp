@@ -19,7 +19,7 @@ struct NODE {
 }	;
 
 struct HASHTABLE {
-	static const int M = 10001 , HASH_SIZE = 10001;
+	static const int M = 10007 , HASH_SIZE = 10007;
 	PT st[M];
 	int hash[M], pos[M], size;
 	int insert(PT n)

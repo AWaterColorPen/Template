@@ -2,9 +2,9 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#define INF 100
 
 using namespace std;
+
 struct NIM {
 	static const int M = 105 ;
 	int vis[M], sg[M];

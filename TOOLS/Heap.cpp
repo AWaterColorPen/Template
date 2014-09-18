@@ -11,7 +11,7 @@ struct HEAP {
 		int val, id;
 		NODE () {}
 		NODE (int val, int id) : val(val), id(id) {}
-	} hp[M], tmp;
+	}	hp[M];
 	int pos[M], size;
 	
 	void push(NODE tt)

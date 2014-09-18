@@ -9,13 +9,18 @@ const int NN = 5005;
 const int inf = 0x0f0f0f0f;
 
 struct EDGE {
-	int i, c, d; EDGE *next, *ani;
-}	*Edge[NN], *Path[NN], e[NN<<3];
+	int i, c, d; 
+	EDGE *next, *ani;
+	EDGE() {}
+	EDGE(int i, int c, int d, EDGE *next, EDGE *ani) : i(i), c(c), d(d), next(next), ani(ani) {}
+}	*Edge[NN], *Path[NN], e[NN << 3];
+
 void _addedge(int i, int j, int c, int d, EDGE &e1, EDGE &e2)
 {
-	e1.i=j, e1.c=c, e1.d= d, e1.ani=&e2, e1.next=Edge[i], Edge[i]=&e1;
-	e2.i=i, e2.c=0, e2.d=-d, e2.ani=&e1, e2.next=Edge[j], Edge[j]=&e2;
+	e1 = EDGE(j, c, d, Edge[i], &e2); Edge[i] = &e1;
+	e2 = EDGE(i, 0, -d, Edge[j], &e1); Edge[j] = &e2;
 }
+
 int ds[NN], inq[NN];
 int SPFA(int s, int end)
 {
