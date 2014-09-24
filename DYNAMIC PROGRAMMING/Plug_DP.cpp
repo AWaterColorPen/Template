@@ -2,56 +2,66 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#define HASH_SIZE 100001
-#define inf 0x0f0f0f0f
 
 using namespace std;
-bool Maze[15][15];
-int vis[20], CON[20];
+
+typedef long long LL;
+const int inf = 0x0f0f0f0f;
+
 struct STATE {
-	int conn, fire;
-	int hash() {return conn+fire;}
-	int compare(STATE n) {return (conn==n.conn && fire==n.fire);}
-	void decode(int now, int m, int p[]) {
-		for (int i=0; i<=m; i++, now>>=3) p[i]=now&7;
+	static int vs[10];
+	static int m;
+
+	int cn, fire;
+	STATE () {}
+	STATE (int m) : m(m) {}
+	bool operator == (STATE &o) { return cn == o.cn && fire == o.fire; }
+	int hash() { return cn + fire; }
+	
+	void decode(int now, int p[]) {
+		for (int i = 0; i <= m; i++, now >>= 3) p[i] = now & 7;
 	}
-	void encode(int m, int p[]) {
-		conn=0; for (int i=m; i>=0; i--) conn=conn<<3|p[i];
+	
+	void encode(int p[]) {
+		cn = 0;
+		for (int i = m; i >= 0; i--) cn = (cn << 3) | p[i];
 	}
-	int min_rep(int m, int p[])
+
+	int minrep(int p[])
 	{
-		memset(vis, 0, sizeof(vis));
-		for (int i=0; i<m; i++) if (p[i]!=inf) vis[CON[i]]=1;
-		for (int i=1; i<=m; i++) if (vis[i]==0) return i;
+		memset(vs, 0, sizeof(vs));
+		for (int i = 0; i <= m; i++) vs[p[i]] = 1;
+		for (int i = 1; i <= m; i++) if (vs[i] == 0) return i;
 	}
-	void min_rearrange(int m, int p[])
+
+	void mintrim(int p[])
 	{
-		int cnt=0, i; memset(vis, 0, sizeof(vis));
-		for (i=0; i<m; i++) if (vis[p[i]]==0) vis[p[i]]=++cnt;
-		for (i=0; i<m; i++) p[i]=vis[p[i]];
+		int cnt = 0; 
+		memset(vs, 0, sizeof(vs));
+		for (int i = 0; i <= m; i++) if (vs[p[i]] == 0) vs[p[i]] = ++cnt;
+		for (int i = 0; i <= m; i++) p[i] = vs[p[i]];
 	}
-	void gen_rearrange(int m, int p[])
+
+	void merge(int px, int py, int p[])
 	{
-		int cnt=0, bef;
-		for (int i=0; i<=m; i++) if (vis[i]) CON[i]=3, bef=i;
-		if (cnt==1) { if (FIRE[bef]==0) CON[bef]=0; return ; }
-		for (int i=0; i<=m; i++) if (vis[i]) { CON[i]=1; break; }
-		for (int i=m; i>=0; i--) if (vis[i]) { CON[i]=2; break; }
+		if (px == 0 || py == 0 || px == py) return;
+		for (int i = 0; i <= m; i++) if (p[i] == py) p[i] = px
 	}
-}
-struct HASHTABLE {
-	STATE st[HASH_SIZE];
-	int hash[HASH_SIZE], pos[HASH_SIZE], size;
-	int val[HASH_SIZE];
-	void insert(STATE n, int _val)
+
+	void fresh(int x, int y, int p[]) { p[x] = p[y] = minrep(p); }
+
+	int tar(int x, int y, int z) { return z == 1 ? x : y ; }
+	void trans(int i, int j, int x, int y, int p[])
 	{
-		int i, now=n.hash()%HASH_SIZE;
-		for (i=hash[now]; i; i=pos[i])
-			if (st1[i].compare(n)) { val[i]+=_val;  return ; }
-		++size, val[size]=_val, st[size]=n, pos[size]=hash[now], hash[now]=size;
+		int xx = p[i], yy = p[j];
+		p[i] = (x == 0) ? 0 : tar(xx, yy, x);
+		p[j] = (y == 0) ? 0 : tar(xx, yy, y);
 	}
-	void clear() { memset(hash, size=0, sizeof(hash)); }
-}	F[2];
+}	;
+
+bool maze[15][15];
+int con[10];
+
 void vary_vis(int to, int now)				 //to==1 向右，to==0 向左，3同to==1
 {
 	for (int cnt=(CON[now]==3); cnt; now+=to==1?1:-1) {
