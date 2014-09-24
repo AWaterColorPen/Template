@@ -12,11 +12,12 @@ struct STATE {
 	static int vs[10];
 	static int m;
 
-	int cn, fire;
+	int cn;
 	STATE () {}
 	STATE (int m) : m(m) {}
-	bool operator == (STATE &o) { return cn == o.cn && fire == o.fire; }
-	int hash() { return cn + fire; }
+	bool operator == (STATE &o) { return cn == o.cn; }
+	
+	int hash() { return cn; }
 	
 	void decode(int now, int p[]) {
 		for (int i = 0; i <= m; i++, now >>= 3) p[i] = now & 7;
