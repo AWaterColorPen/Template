@@ -522,8 +522,45 @@ double delaunay_circle(PT a, PT b, PT o, double r)
 	return oo.sector1(ka, kb);
 }
 
-//sphere
-/*
-PT sphere(double lam, double phi) { return PT(cos(phi) * cos(lam), cos(phi) * sin(lam), sin(phi)); }
-double dissphere(PT a, PT b, double r) { return asin( dist(a, b) / 2) * r ; }
-*/
+//3D PT
+struct PT3 {
+	double x, y, z;
+	PT3 () {}
+	PT3 (double x, double y, double z) : x(x), y(y), z(z) {}
+	PT3 operator + (const PT3 o) { return PT3(x + o.x, y + o.y, z + o.z) ; }
+	PT3 operator - (const PT3 o) { return PT3(x - o.x, y - o.y, z - o.z) ; }
+	PT3 operator * (const PT3 o) { return PT3(y * o.z - z * o.y, z * o.x - x * o.z, x * o.y - y * o.x) ; } // * sin
+	double operator ^ (PT3 o) { return x * o.x + y * o.y + z * o.z ; } // * cos
+	PT3 operator * (double s) { return PT3(x * s, y * s, z * s) ; }
+	PT3 operator / (double s) { return PT3(x / s, y / s, z / s) ; }
+	bool operator < (const PT3 &o) const { return z < o.z - eps || (z < o.z + eps && y < o.y - eps) || (z < o.z + eps && y < o.y + eps && x < o.x - eps) ; }
+	void rd() { scanf("%lf %lf %lf", &x, &y, &z) ; }
+}	;
+
+double dpr(PT3 a, PT3 b) { return a ^ b ; }
+double dpr(PT3 a, PT3 b, PT3 c) { return dpr(b - a, c - a) ; }
+
+double vlen(PT3 a) { return sqrt(a ^ a) ; }
+double dist(PT3 a, PT3 b) { return vlen(a - b) ; }
+
+struct SPH {
+	PT3 o;
+	double r;
+	void rd() { o.rd(); scanf("%lf", &r); }
+}	;
+
+//点p到直线ab距离
+double disptoline(PT3 p, PT3 a, PT3 b) { return vlen((b - p) * (a - p)) / dist(a, b); }
+
+void ints_line_sphere(PT3 s, double r, PT3 a, PT3 b, PT3 &p1, PT3 &p2)
+{
+	double d = disptoline(s, a, b);
+	double t = sqrt(r * r - d * d) / dist(a, b);
+	PT3 v = (s - a) * (b - a) * (b - a);
+	PT3 p = sgn(d) == 0 ? s : s + v / vlen(v) * d;
+	p1 = p + (a - b) * t;
+	p2 = p - (a - b) * t;
+}
+
+PT3 sphere(double lam, double phi) { return PT3(cos(phi) * cos(lam), cos(phi) * sin(lam), sin(phi)); }
+double dissphere(PT3 a, PT3 b, double r) { return asin( dist(a, b) / 2) * r ; }
