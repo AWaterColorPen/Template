@@ -1,10 +1,11 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#define INF 10005
 
 using namespace std;
-int next[INF];
+
+const NN = 10005;
+int next[NN];
 void get_next(char s[], int len)
 {
 	next[0] = -1;
