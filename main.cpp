@@ -552,6 +552,7 @@ struct SPH {
 //点p到直线ab距离
 double disptoline(PT3 p, PT3 a, PT3 b) { return vlen((b - p) * (a - p)) / dist(a, b); }
 
+//直线ab与球的交点
 void ints_line_sphere(PT3 s, double r, PT3 a, PT3 b, PT3 &p1, PT3 &p2)
 {
 	double d = disptoline(s, a, b);
@@ -562,5 +563,8 @@ void ints_line_sphere(PT3 s, double r, PT3 a, PT3 b, PT3 &p1, PT3 &p2)
 	p2 = p - (a - b) * t;
 }
 
-PT3 sphere(double lam, double phi) { return PT3(cos(phi) * cos(lam), cos(phi) * sin(lam), sin(phi)); }
-double dissphere(PT3 a, PT3 b, double r) { return asin( dist(a, b) / 2) * r ; }
+//longitude经度 latitude纬度
+PT3 sphere(double lo, double la) { return PT3(cos(lo) * cos(la), cos(la) * sin(lo), sin(la)); }
+
+//球上两点a，b的距离
+double ptoponsphere(PT3 a, PT3 b, double r) { return asin( dist(a, b) / 2) * r ; }

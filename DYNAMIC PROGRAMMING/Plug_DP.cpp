@@ -53,7 +53,7 @@ struct STATE {
 	void merge(int px, int py, int p[])
 	{
 		if (px == 0 || py == 0 || px == py) return;
-		for (int i = 0; i <= m; i++) if (p[i] == py) p[i] = px
+		for (int i = 0; i <= m; i++) if (p[i] == py) p[i] = px;
 	}
 
 	void fresh(int x, int y, int p[]) { p[x] = p[y] = minrep(p); }
