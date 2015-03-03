@@ -52,7 +52,7 @@ struct CUBE {
 		{
 			int x = X[k][i], y = Y[k][i];
 			if (ty & 1) s[y / 9].a[y % 9 / 3][y % 3] = tmp.s[x / 9].a[x % 9 / 3][x % 3];
-			else s[x / 9].a[x % 9 / 3][x % 3]=tmp.s[y / 9].a[y % 9 / 3][y % 3];
+			else s[x / 9].a[x % 9 / 3][x % 3] = tmp.s[y / 9].a[y % 9 / 3][y % 3];
 		}
 	}
 }	cube;
