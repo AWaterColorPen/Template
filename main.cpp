@@ -63,7 +63,7 @@ struct CLE {
 		return (k2 - k1) * r * r / 2;
 	}
 	double sector1(double k1, double k2) { return adjust(k2 - k1) * r * r / 2; }
-	double adjust(double kk) 
+	double adjust(double kk)
 	{
 		if (kk < -PI) kk += PI * 2;
 		if (kk > PI) kk -= PI * 2;
@@ -358,7 +358,7 @@ void hpi(LE l[], int n, PT p[], int &m, LE q[])
 	int tot = 0;
 	sort(l, l + n);
 	for (int i = 0; i < n; i++) if (i == 0 || sgn(l[i].k - l[tot-1].k)) l[tot++] = l[i];
-	
+
 	n = tot, m = 0;
 	int hh = 0, tt = -1;
 	for (int i = 0; i < n; i++)
@@ -370,7 +370,7 @@ void hpi(LE l[], int n, PT p[], int &m, LE q[])
 	}
 	while (hh < tt && cpr(q[hh].a, q[hh].b, lineints(q[tt], q[tt-1])) < eps) tt--;
 	while (hh < tt && cpr(q[tt].a, q[tt].b, lineints(q[hh], q[hh+1])) < eps) hh++;
-	
+
 	q[tt+1] = q[hh];
 	for (int i = hh; i <= tt; ++i) p[m++] = lineints(q[i], q[i+1]);
 	m = unique(p, p+m) - p;
@@ -415,7 +415,7 @@ double rotating_calipers(PT p[], int n1, PT q[], int n2)
 //求最近点对 要先cmpx排序
 //double dis(PT a, PT b) { return (a.mark == b.mark) ? 1e20 : vlen(a - b); }
 
-double p2pmindis(PT p[], PT o[], int l, int r) 
+double p2pmindis(PT p[], PT o[], int l, int r)
 {
 	if (r == l) return 1e20;
 	if (r == l + 1) return dis(p[l], p[r]);
@@ -440,12 +440,12 @@ double p2pmindis(PT p[], PT o[], int l, int r)
 }
 
 //最小包围圆，增量算法
-CLE mincircle(PT p[], int n) 
+CLE mincircle(PT p[], int n)
 {
 	random_shuffle(p, p + n);
 	CLE ret(p[0], 0);
-	
-	for (int i = 0; i < n; i++) 
+
+	for (int i = 0; i < n; i++)
 		if (dist(ret.c, p[i]) > ret.r + eps)
 		{
 			ret = CLE(p[i], 0);
@@ -470,19 +470,19 @@ double area_circle_circle(PT c1, double r1, PT c2, double r2)
 {
 	if (r1 < r2) swap(c1, c2);
 	if (r1 < r2) swap(r1, r2);
-	
+
 	double d = dist(c1, c2);
 	if (d > r1 + r2 - eps) return 0;
 	if (d < r1 - r2 + eps) return r2 * r2 * PI;
-	
+
 	double cosA1 = (r1 * r1 + d * d - r2 * r2) / (r1 * d * 2);
 	double cosA2 = (r2 * r2 + d * d - r1 * r1) / (r2 * d * 2);
 	double th1 = acos(cosA1) * 2;
 	double th2 = acos(cosA2) * 2;
-	
+
 	double s1 = th1 / 2 * r1 * r1 -  r1 * r1 * sin(th1) / 2;
 	double s2 = th2 / 2 * r2 * r2 -  r2 * r2 * sin(th2) / 2;
-	
+
 	return s1 + s2;
 }
 
@@ -492,33 +492,33 @@ double delaunay_circle(PT a, PT b, PT o, double r)
 	int d1 = (dist(a, o) > r - eps);
 	int d2 = (dist(b, o) > r - eps);
 	int dd = (disptoseg(o, a, b) < r - eps);
-	
+
 	CLE oo = CLE(o, r);
 	double ka = oo.ag(a);
 	double kb = oo.ag(b);
-	
+
 	if (dd)
 	{
 		if (d1 == 0 && d2 == 0) return cpr(o, a, b) / 2;
-		
+
 		PT p1, p2;
 		ints_line_circle(o, r, a, b, p1, p2);
 		double k1 = oo.ag(p1);
 		double k2 = oo.ag(p2);
-		
+
 		if (d1 == 1 && d2 == 1)
 		{
 			if (dist(p1, a) > dist(p2, a)) swap(p1, p2), swap(k1, k2);
 			double ans = oo.sector1(ka, k1) + oo.sector1(k2, kb);
 			return ans + cpr(o, p1, p2) / 2;
 		}
-		
+
 		if (disptoseg(p1, a, b) > eps) swap(p1, p2), swap(k1, k2);
-		
+
 		if (d1 == 1 && d2 == 0) return oo.sector1(ka, k1) + cpr(o, p1, b) / 2;
 		if (d1 == 0 && d2 == 1) return oo.sector1(k1, kb) + cpr(o, a, p1) / 2;
 	}
-	
+
 	return oo.sector1(ka, kb);
 }
 
@@ -543,6 +543,152 @@ double dpr(PT3 a, PT3 b, PT3 c) { return dpr(b - a, c - a) ; }
 double vlen(PT3 a) { return sqrt(a ^ a) ; }
 double dist(PT3 a, PT3 b) { return vlen(a - b) ; }
 
+double volume(PT3 a, PT3 b, PT3 c, PT3 d) { return (b - a) * (c - a) ^ (d - a) ; }
+
+struct CH3D {
+	static const int M = 1005;
+	struct fac {
+		int a, b, c, ok;
+		fac () {}
+		fac (int a, int b, int c, int ok) : a(a), b(b), c(c), ok(ok) {}
+	}	;
+
+	int n;
+	PT3 p[M];
+
+	int cnt;
+	fac f[M << 3];
+
+	int vv[M][M];
+
+	double area(PT3 a, PT3 b, PT3 c) { return vlen((b - a) * (c - a)) ; }
+
+	//正：点在面同向
+	double ptof(PT3 pp, fac g)
+	{
+		PT3 m = p[g.b] - p[g.a], n = p[g.c] - p[g.a], t = pp - p[g.a];
+		return (m * n) ^ t;
+	}
+
+	void deal(int j, int a, int b)
+	{
+		int i = vv[a][b];
+		if (f[i].ok)
+		{
+			if (ptof(p[j], f[i]) > eps) dfs(j, i);
+			else
+			{
+				vv[j][b] = vv[a][j] = vv[b][a] = cnt;
+				f[cnt++] = fac(b, a, j, 1);
+			}
+		}
+	}
+
+	void dfs(int j, int i)
+	{
+		f[i].ok = 0;
+		deal(j, f[i].b, f[i].a);
+		deal(j, f[i].c, f[i].b);
+		deal(j, f[i].a, f[i].c);
+	}
+
+	int same(int i, int j)
+	{
+		PT3 &a = p[f[i].a], &b = p[f[i].b], &c = p[f[i].c];
+		return (sgn(volume(a, b, c, p[f[j].a])) || sgn(volume(a, b, c, p[f[j].b])) || sgn(volume(a, b, c, p[f[j].c]))) == 0;
+	}
+	//保证前四个点不公面
+	int check()
+	{
+		if (n < 4) return -1;
+
+		int sb = 1;
+		for (int i = 1; i < n; i++)
+			if (vlen(p[0] - p[i]) > eps)
+			{
+				swap(p[1], p[i]);
+				sb = 0;
+				break;
+			}
+		if (sb) return -2;
+
+		sb = 1;
+		for (int i = 2; i < n; i++)
+			if (area(p[0], p[1], p[i]) > eps)
+			{
+				swap(p[2], p[i]);
+				sb = 0;
+				break;
+			}
+		if (sb) return -3;
+
+		sb = 1;
+		for (int i = 3; i < n; i++)
+			if (sgn(volume(p[0], p[1], p[2], p[i])))
+			{
+				swap(p[3], p[i]);
+				sb = 0;
+				break;
+			}
+		if (sb) return -4;
+		return 0;
+	}
+	//构建三维凸包
+	int construct()
+	{
+		cnt = 0;
+
+		if (check() < 0) return -1;
+
+		for (int i = 0; i < 4; i++)
+		{
+			fac tt((i + 1) % 4, (i + 2) % 4, (i + 3) % 4, 1);
+			if (ptof(p[i], tt) > 0) swap(tt.b, tt.c);
+			vv[tt.a][tt.b] = vv[tt.b][tt.c] = vv[tt.c][tt.a] = cnt;
+			f[cnt++] = tt;
+		}
+
+		for (int i = 4; i < n; i++)
+			for (int j = 0; j < cnt; j++)
+				if (f[j].ok && ptof(p[i], f[j]) > eps)
+				{
+					dfs(i, j);
+					break;
+				}
+
+		int m = 0;
+		for (int i = 0; i < cnt; i++) if (f[i].ok) f[m++] = f[i];
+		cnt = m;
+	}
+	//表面积
+	double area()
+	{
+		double ret = 0;
+		for (int i = 0; i < cnt; i++) ret += area(p[f[i].a], p[f[i].b], p[f[i].c]);
+		return ret / 2;
+	}
+	//体积
+	double volume()
+	{
+		PT3 oo(0, 0, 0);
+		double ret = 0;
+		for (int i = 0; i < cnt; i++) ret += volume(oo, p[f[i].a], p[f[i].b], p[f[i].c]);
+		return fabs(ret / 6);
+	}
+	//表面多边形数
+	int facetcnt()
+	{
+		int ans = 0;
+		for (int i = 0; i < cnt; i++)
+		{
+			int nb = 1;
+			for (int j = 0; j < i && nb; j++) nb ^= same(i, j);
+			ans += nb;
+		}
+		return ans;
+	}
+}	;
+
 struct SPH {
 	PT3 o;
 	double r;
@@ -551,6 +697,13 @@ struct SPH {
 
 //点p到直线ab距离
 double disptoline(PT3 p, PT3 a, PT3 b) { return vlen((b - p) * (a - p)) / dist(a, b); }
+
+//空间上异面直线ab与cd的距离
+double dislinetoline(PT3 a, PT3 b, PT3 c, PT3 d)
+{
+	PT3 t = (b - a) * (d - c);
+	return (vlen(t) < eps) ? disptoline(c, a, b) : fabs((d - b) ^ t) / vlen(t);
+}
 
 //直线ab与球的交点
 void ints_line_sphere(PT3 s, double r, PT3 a, PT3 b, PT3 &p1, PT3 &p2)
