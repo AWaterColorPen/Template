@@ -1,43 +1,45 @@
-#include <iostream>
-#include <cstdio>
+#include <bits/stdc++.h>
 
 using namespace std;
 
+template <typename T, size_t size>
 struct BIT {
-	static const int M = 400005;
-	int T[M];
-	void modify(int i, int m)
-	{
-		for ( ; i < M; i += i & (-i)) T[i] += m;
+	T _array[size];
+
+	void modify(int i, T value) {
+		for (; i < size; i += i & (-i)) _array[i] += value;
 	}
-	int ask(int i)
-	{
-		int sum = 0;
-		for ( ; i ; i -=i & (-i)) sum += T[i];
+
+	T ask(int i) {
+		T sum = 0;
+		for (; i; i -= i & (-i)) sum += _array[i];
 		return sum;
 	}
-}	bt;
+};
 
+template <typename T, size_t rows, size_t cols>
 struct BIT2 {
-	static const int M = 1005;
-	int T[M][M];
-	void modify(int i, int j, int m)
+	T _array[rows][cols];
+
+	void modify(int i, int j, T value)
 	{
-		for ( ; i < M; i += i & (-i)) 
-			for (int k = j; k < M; k += k& (-k))
-				T[i][k] += m;
+		for ( ; i < rows; i += i & (-i))
+			for (int k = j; k < cols; k += k& (-k))
+				_array[i][k] += value;
 	}
-	int cnt(int i, int j)
+
+	T ask(int i, int j)
 	{
-		int sum = 0;
+		T sum = 0;
 		for ( ; i ; i -=i & (-i))
 			for (int k = j; k ; k -= k& (-k))
-				sum += T[i][k];
+				sum += _array[i][k];
 		return sum;
 	}
-	int ask(int i, int j, int x, int y) 
+
+	T ask(int i, int j, int x, int y)
 	{
-		return cnt(x, y) - cnt(i - 1, y) - cnt(x, j - 1) + cnt(i - 1, j - 1);
+		return ask(x, y) - ask(i - 1, y) - ask(x, j - 1) + ask(i - 1, j - 1);
 	}
-}	bt2;
+};
 
