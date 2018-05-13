@@ -1,7 +1,5 @@
 #include <bits/stdc++.h>
 
-using namespace std;
-
 template <typename T, size_t size>
 struct BIT {
         T _array[size];
