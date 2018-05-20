@@ -59,6 +59,7 @@ void rho(LL n)
 	while (t == 1 || t == n);
 	rho(t), rho(n / t);
 }
+
 void prime_factor(LL n)
 {
 	Map.clear(), rho(n);
