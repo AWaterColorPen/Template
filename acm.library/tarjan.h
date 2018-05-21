@@ -27,7 +27,7 @@ struct Tarjan {
                         else if (_inStack[v]) _low[u] = std::min(_low[u], _low[v]);
 
                 if (_dfn[u] == _low[u] && ++_blockSize)
-                        for (auto v = 0; v != u;)
+                        for (auto v = -1; v != u;)
                                 v = _stack.top(), _stack.pop(), _block[v] = _blockSize, _inStack[v] = 0;
         }
 

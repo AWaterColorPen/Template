@@ -3,4 +3,4 @@ project(acm_library)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(acm_library main.cpp matrix.h bit.h other.h helper.h legacy.h tries.h tarjan.h extension.h hungary.h graphhash.h stoerwagner.h pollardrho.h)
+add_executable(acm_library main.cpp matrix.h bit.h other.h helper.h legacy.h tries.h tarjan.h extension.h hungary.h graphhash.h stoerwagner.h pollardrho.h playblock.h)
